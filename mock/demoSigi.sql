@@ -1,0 +1,12 @@
+-- ────────────────────────────────────────────────────────────────────
+-- Este archivo SQL ya NO se usa para inicializar la base de datos.
+--
+-- El proyecto ahora usa un script TypeScript que crea el schema desde
+-- los modelos Sequelize e inserta datos coherentes en un solo paso:
+--
+--   npm run db:setup      # crea BD si falta, sincroniza schema, inserta datos
+--   npm run db:reset      # alias destructivo (drop+recrear)
+--   npm run db:seed       # solo inserta datos (asume schema existente)
+--
+-- Ver scripts/db-setup.ts y postman/README.md para el detalle.
+-- ────────────────────────────────────────────────────────────────────
