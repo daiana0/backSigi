@@ -27,9 +27,19 @@ export const usuarioService = {
     };
   },
 
+
   async getByEmail(email: string) {
-    return Usuario.findOne({ where: { email } });
+    return Usuario.findOne({
+      where: { email },
+      include: [
+        {
+          association: 'administrativo',
+          include: ['rol'],
+        },
+      ],
+    });
   },
+
 
   async getById(id: number) {
     return Usuario.findByPk(id, {

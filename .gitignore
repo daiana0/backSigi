@@ -11,6 +11,7 @@ lerna-debug.log*
 .env.local
 .env.*.local
 
+
 # Archivos compilados de TypeScript
 dist/
 build/
@@ -40,6 +41,7 @@ desktop.ini
 # Archivos de pruebas
 coverage/
 .nyc_output/
+credenciales-test.txt
 
 # Archivos temporales
 *.tmp
@@ -51,3 +53,6 @@ coverage/
 
 # Archivos de configuración local (pueden contener rutas personales)
 *.local
+
+# Uploads dinámicos
+upload

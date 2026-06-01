@@ -38,7 +38,15 @@ export const usuarioController = {
       const parsed = CreateUsuarioDto.safeParse(req.body);
       if (!parsed.success) return respondZodError(res, parsed.error);
       const nuevo = await usuarioService.create(parsed.data);
-      res.status(201).json({ status: 'success', data: nuevo });
+      const respuesta = {
+        id: nuevo.id,
+        nombre: nuevo.nombre,
+        apellido: nuevo.apellido,
+        email: nuevo.email,
+        idAdministrativo: nuevo.idAdministrativo,
+        activo: nuevo.activo
+      }
+      res.status(201).json({ status: 'success', data: respuesta });
     } catch (err) {
       next(err);
     }
@@ -49,7 +57,7 @@ export const usuarioController = {
       const id = parseInt(req.params.id as string);
       const parsed = UpdateUsuarioDto.safeParse(req.body);
       if (!parsed.success) return respondZodError(res, parsed.error);
-      
+
       const actualizado = await usuarioService.update(id, parsed.data);
       if (!actualizado) {
         return res.status(404).json({ status: 'error', message: 'Usuario no encontrado.' });

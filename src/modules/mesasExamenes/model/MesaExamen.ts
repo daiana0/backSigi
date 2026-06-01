@@ -15,6 +15,7 @@ interface MesaExamenAttributes extends InferAttributes<MesaExamen> {
     totalDesaprobados: number;
     totalAusentes: number;
     tipo: string;
+    categoria: string;
     activo: CreationOptional<boolean>;
     idAdministrativo: number;
 }
@@ -32,6 +33,7 @@ interface MesaExamenCreationAttributes extends InferCreationAttributes<MesaExame
     totalDesaprobados: number;
     totalAusentes: number;
     tipo: string;
+    categoria: string;
     idAdministrativo: number;
 }
 
@@ -49,6 +51,7 @@ class MesaExamen extends Model<MesaExamenAttributes, MesaExamenCreationAttribute
     declare totalDesaprobados: number;
     declare totalAusentes: number;
     declare tipo: string;
+    declare categoria: string;
     declare activo: CreationOptional<boolean>;
     declare idAdministrativo: number;
 }
@@ -119,7 +122,13 @@ MesaExamen.init(
             field: "total_ausentes",
         },
         tipo: {
-            type: DataTypes.ENUM("ORDINARIO", "EXTRAORDINARIO", "RECUPERACION"),
+            type: DataTypes.ENUM("REGULAR", "LIBRE", "PROMOCIONAL"),
+            defaultValue: "REGULAR",
+            allowNull: false,
+        },
+        categoria: {
+            type: DataTypes.ENUM("ORDINARIAS", "EXTRAORDINARIAS"),
+            defaultValue: "ORDINARIAS",
             allowNull: false,
         },
         activo: {

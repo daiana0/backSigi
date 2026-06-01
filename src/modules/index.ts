@@ -36,6 +36,8 @@ import TipoDocumentoRequerido from "./tipoDocumentoRequerido/model/TipoDocumento
 import TurnoExamen from "./turnos-examenes/model/TurnoExamen.js";
 import UnidadCurricular from "./unidades_curriculares/model/UnidadCurricular.js";
 import Usuario from "./usuarios/model/Usuario.js";
+import TokenBlacklist from "./auth/model/TokenBlacklist.js";
+import NotificacionXEmail from "./notificacionesXEmail/model/notificacionXEmail.model.js";
 
 // ─── Relaciones BelongsTo (claves foráneas) ──────────────────────
 

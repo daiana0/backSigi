@@ -15,6 +15,7 @@ export const administrativoService = {
   async getAll(page: number = DEFAULT_PAGE, limit: number = DEFAULT_LIMIT) {
     const offset = (page - 1) * limit;
     const { count, rows } = await Administrativo.findAndCountAll({
+      where: { idRol: [1, 4] }, // solo administrativos (idRol 1 o 4),
       limit,
       offset,
       order: [['id', 'ASC']],

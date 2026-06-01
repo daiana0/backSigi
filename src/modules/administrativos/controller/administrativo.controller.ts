@@ -5,6 +5,7 @@ import { UpdateAdministrativoDto } from '../dto/update-administrativo.dto.js';
 import { parsePagination } from '../../../helpers/parsePagination.js';
 import { respondZodError } from '../../../helpers/respondZodError.js';
 
+
 // ─── Controlador ─────────────────────────────────────
 export const administrativoController = {
 
@@ -33,7 +34,7 @@ export const administrativoController = {
       if (!admin) {
         return res.status(404).json({
           status: 'error',
-          message: `No se encontró ningún administrativo con id ${id}.`,
+          message: `No se encontró ningún administrativo con id ${id}.`
         });
       }
       res.status(200).json({ status: 'success', data: admin });
@@ -50,10 +51,11 @@ export const administrativoController = {
         return respondZodError(res, parsed.error);
       }
       const nuevo = await administrativoService.create(parsed.data);
+      const respuesta = { id: nuevo.id, nombre: nuevo.nombre, apellido: nuevo.apellido, email: nuevo.email, dni: nuevo.dni, idRol: nuevo.idRol, telefono: nuevo.telefono, domicilio: nuevo.domicilio, activo: nuevo.activo }
       res
         .status(201)
-        .location(`/api/v1/administrativos/${nuevo.id}`)
-        .json({ status: 'success', data: nuevo });
+        .location(`/api/v1/administrativos/${respuesta.id}`)
+        .json({ status: 'success', data: respuesta });
     } catch (err) {
       next(err);
     }

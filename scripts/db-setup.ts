@@ -93,12 +93,12 @@ async function seed() {
   // ─── Administrativos (hooks bcrypt corren con create individual) ──
   const adminMaria = await Administrativo.create({
     nombre: 'María', apellido: 'Gómez', email: 'maria.gomez@instituto.edu',
-    dni: '20123456', contrasenia: 'admin1234',
+    dni: '20123456', contrasenia: 'Admin1234!',
     telefono: '351-1111111', domicilio: 'Calle 1 N° 100', idRol: 1, activo: true,
   } as any);
   const adminCarlos = await Administrativo.create({
     nombre: 'Carlos', apellido: 'Pérez', email: 'carlos.perez@instituto.edu',
-    dni: '20765432', contrasenia: 'admin1234',
+    dni: '20765432', contrasenia: 'Admin1234!',
     telefono: '351-2222222', domicilio: 'Av. Siempre Viva 742', idRol: 1, activo: true,
   } as any);
   console.log(`  • 2 administrativos`);
@@ -106,24 +106,24 @@ async function seed() {
   // ─── Usuarios ─────────────────────────────────────────
   const usuarioJuan = await Usuario.create({
     nombre: 'Juan', apellido: 'López', email: 'juan.lopez@correo.com',
-    contrasenia: 'usuario1234', idAdministrativo: adminMaria.id,
+    contrasenia: 'Usuario1234!', idAdministrativo: adminMaria.id,
   } as any);
   const usuarioMarcela = await Usuario.create({
     nombre: 'Marcela', apellido: 'Ruiz', email: 'marcela.ruiz@correo.com',
-    contrasenia: 'usuario1234', idAdministrativo: adminMaria.id,
+    contrasenia: 'Usuario1234!', idAdministrativo: adminMaria.id,
   } as any);
   console.log(`  • 2 usuarios`);
 
   // ─── Docentes ─────────────────────────────────────────
   const docenteLucia = await Docente.create({
     nombre: 'Lucía', apellido: 'Martínez', email: 'lucia.martinez@instituto.edu',
-    contrasenia: 'docente1234', dni: '28999888', titulo: 'Lic. en Sistemas',
+    contrasenia: 'Docente1234!', dni: '28999888', titulo: 'Lic. en Sistemas',
     especialidad: 'Bases de datos', domicilio: 'Calle Falsa 100', telefono: '351-1234567',
     foto: null, idAdministrativo: adminMaria.id,
   } as any);
   const docenteRoberto = await Docente.create({
     nombre: 'Roberto', apellido: 'Suárez', email: 'roberto.suarez@instituto.edu',
-    contrasenia: 'docente1234', dni: '27444555', titulo: 'Ing. en Informática',
+    contrasenia: 'Docente1234!', dni: '27444555', titulo: 'Ing. en Informática',
     especialidad: 'Algoritmos', domicilio: 'Av. Test 200', telefono: '351-7654321',
     foto: null, idAdministrativo: adminMaria.id,
   } as any);
@@ -254,7 +254,7 @@ async function seed() {
   // ─── Evaluación ───────────────────────────────────────
   const instancia = await InstanciaEvaluativa.create({
     idDivisionXUnidadCurricular: dxuc1.id, descripcion: 'Primer Parcial',
-    fecha: '2026-05-15', tipo: 'parcial', idAdministrativo: adminMaria.id,
+    fecha: '2026-06-20', tipo: 'parcial', idAdministrativo: adminMaria.id,
   } as any);
   await LegajoXInstanciaEvaluativa.create({
     idInstanciaEvaluativa: instancia.id, idLegajo: legajo1.id, nota: 8,

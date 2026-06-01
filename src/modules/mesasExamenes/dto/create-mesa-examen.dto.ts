@@ -1,7 +1,8 @@
 import { z } from 'zod';
 
 // Definimos un Enum para el tipo de mesa para asegurar consistencia con la DB
-export const TipoMesaExamen = z.enum(["ORDINARIO", "EXTRAORDINARIO", "RECUPERACION"]);
+export const TipoMesaExamen = z.enum(["REGULAR", "LIBRE", "PROMOCIONAL"]);
+export const CategoriaMesa = z.enum(["ORDINARIAS", "EXTRAORDINARIAS"]);
 
 export const CreateMesaExamenDto = z.object({
   idTurnoExamen: z.number().int().positive(),
@@ -12,6 +13,7 @@ export const CreateMesaExamenDto = z.object({
   idDocenteVocal1: z.number().int().positive(),
   idDocenteVocal2: z.number().int().positive(),
   tipo: TipoMesaExamen,
+  categoria: CategoriaMesa,
   idAdministrativo: z.number().int().positive(),
 });
 

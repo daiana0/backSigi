@@ -41,7 +41,13 @@ import { tipoDocumentoRouter } from "./modules/tipoDocumentoRequerido/tipoDocume
 import { turnoExamenRouter } from "./modules/turnos-examenes/turno-examen.routes.js";
 import { unidadCurricularRouter } from "./modules/unidades_curriculares/unidad-curricular.routes.js";
 import { usuarioRouter } from "./modules/usuarios/usuarios.routes.js";
-import { authRouter } from "./modules/usuarios/auth.routes.js";
+import { authRouter } from "./modules/auth/auth.routes.js";
+import { uploadRouter } from "./modules/uploads/uploads.routes.js";
+import { startTokenCleanupScheduler } from "./helpers/token-cleanup.js";
+import path from "path";
+import { notificacionXEmailRouter } from "./modules/notificacionesXEmail/notificacionXEmail.routes.js";
+import { notificacionesCron } from "./core/cron-taeras/notificaciones.cron.js";
+
 
 dotenv.config();
 
@@ -53,8 +59,12 @@ app.use(cors());
 app.use(express.json());
 app.use(morgan("dev"));
 
+// ─── Servir archivos estáticos ───────────────────────────
+app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
+
 // ─── Registro de todas las rutas (orden alfabético) ─────────────────
 app.use(`${RAIZ}/auth`, authRouter);
+app.use(`${RAIZ}/uploads`, uploadRouter);
 app.use(`${RAIZ}/administrativos`, administrativoRouter);
 app.use(`${RAIZ}/asistencias`, asistenciaRouter);
 app.use(`${RAIZ}/cambios-plan-estudio`, cambioPlanEstudioRouter);
@@ -90,6 +100,7 @@ app.use(`${RAIZ}/tipos-documentos-requeridos`, tipoDocumentoRouter);
 app.use(`${RAIZ}/turnos-examenes`, turnoExamenRouter);
 app.use(`${RAIZ}/unidades-curriculares`, unidadCurricularRouter);
 app.use(`${RAIZ}/usuarios`, usuarioRouter);
+app.use(`${RAIZ}/notificaciones-x-email`, notificacionXEmailRouter);
 
 app.get("/health", (req: Request, res: Response) => {
   res.json({
@@ -105,6 +116,10 @@ const main = async (): Promise<void> => {
   try {
     await sequelize.authenticate();
     console.log("✅ Conexión a la base de datos exitosa!");
+    // Aquí se inicia la limpieza
+    startTokenCleanupScheduler();
+    // Aquí se inician las tareas programadas (notificaciones por email)
+    notificacionesCron();
     await sequelize.sync({ force: false });
     app.listen(PORT, () => {
       console.log(`🚀 App de asistencia corriendo en http://localhost:${PORT}`);

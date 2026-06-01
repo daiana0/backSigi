@@ -65,3 +65,25 @@ Alcance: revisión del README contra el código real (`src/`, `mock/`, `package.
 El backend respeta la arquitectura por capas descrita en el README en los 35 módulos. Los puntos sólidos son: validación con Zod, manejo centralizado de errores, paginación uniforme en la mayoría de los servicios, hashing con bcrypt y separación clara entre routes/controller/service/dto/model.
 
 Los hallazgos críticos son **4** y afectan principalmente a seguridad (mesa-examen-x-legajo sin auth, contraseñas devueltas) y consistencia (colisión de nombres y paginación inconsistente en mesa-examen). Todos son arreglos puntuales y de bajo riesgo.
+
+---
+
+## 5. Correcciones aplicadas a BUG-006, BUG-007 y BUG-008
+
+### BUG-006 - `POST /auth/login` con body vacío
+- Se agregó una validación explícita al inicio de `authController.login` para rechazar requests sin body.
+- Respuesta: `400 Bad Request` con el mensaje `El body no puede estar vacío.`
+
+### BUG-007 - `POST /auth/login` sin contraseña
+- Se validó que `email` y `contrasenia` sean obligatorios antes de consultar la base.
+- Respuesta: `400 Bad Request` con el mensaje `Email y contraseña son obligatorios.`
+
+### BUG-008 - Acceso a rutas protegidas con token inválido o manual
+- `validateJwt` dejó de simular autenticación y ahora verifica el JWT real con `jwt.verify`.
+- El login ahora firma el token con `id`, `email` y `rol`, tomando el rol desde la relación `Usuario -> Administrativo -> Rol`.
+- Si el token no existe, no tiene formato Bearer, está alterado o expiró, se responde con `401 Unauthorized`.
+
+### Resultado
+- Los errores de entrada del login ya no terminan en `500`.
+- Las rutas protegidas ya no aceptan tokens inventados manualmente.
+- `validateRole` sigue funcionando porque `req.user.rol` ahora se carga desde el JWT verificado.

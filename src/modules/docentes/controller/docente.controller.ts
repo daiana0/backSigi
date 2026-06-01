@@ -50,10 +50,20 @@ export const docenteController = {
         return respondZodError(res, parsed.error);
       }
       const nuevo = await docenteService.create(parsed.data);
+      const respuesta = {
+        id: nuevo.id, nombre: nuevo.nombre,
+        apellido: nuevo.apellido,
+        email: nuevo.email,
+        dni: nuevo.dni,
+        titulo: nuevo.titulo,
+        domicilio: nuevo.domicilio,
+        telefono: nuevo.telefono,
+        idAdministrativo: nuevo.idAdministrativo
+      };
       res
         .status(201)
-        .location(`/api/v1/docentes/${nuevo.id}`)
-        .json({ status: 'success', data: nuevo });
+        .location(`/api/v1/docentes/${respuesta.id}`)
+        .json({ status: 'success', data: respuesta });
     } catch (err) {
       next(err);
     }

@@ -25,7 +25,7 @@ class Usuario extends Model<UsuarioAttributes, UsuarioCreationAttributes> {
   declare nombre: string;
   declare apellido: string;
   declare email: string;
-  declare contrasenia: string | null;
+  declare contrasenia: string;
   declare activo: CreationOptional<boolean>;
   declare idAdministrativo: number;
 

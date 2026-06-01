@@ -1,12 +1,71 @@
 import { Request, Response, NextFunction } from 'express';
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
+import TokenBlacklist from '../../modules/auth/model/TokenBlacklist.js';
 
-export const validateJwt = (req: Request, res: Response, next: NextFunction) => {
-  // Falta: extraer el token del header Authorization, verificarlo, y cargar `req.user`.
-  // Ejemplo (solo para desarrollo):
-  if (!req.headers.authorization) {
-    return res.status(401).json({ status: 'error', message: 'Token no proporcionado' });
+dotenv.config();
+
+export interface JwtPayload {
+  id: number;
+  email: string;
+  rol: string;
+  entityType?: string;
+  jti?: string;
+  exp?: number;
+}
+
+declare global {
+  namespace Express {
+    interface Request {
+      user?: JwtPayload;
+    }
   }
-  // Simular usuario autenticado
-  (req as any).user = { id: 1, rol: 'ADMIN' };
-  next();
+}
+
+export const validateJwt = async (req: Request, res: Response, next: NextFunction) => {
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({
+      status: 'error',
+      message: 'Token no proporcionado o formato incorrecto',
+    });
+  }
+
+  const token = authHeader.split(' ')[1];
+  try {
+    const decoded = jwt.verify(
+      token,
+      process.env.JWT_SECRET || 'secret_key_provisoria'
+    ) as JwtPayload & { jti?: string; exp?: number };
+
+    // Verificar si el token está en la lista negra
+    if (decoded.jti) {
+      const blacklisted = await TokenBlacklist.findOne({ where: { jti: decoded.jti } });
+      if (blacklisted) {
+        return res.status(401).json({
+          status: 'error',
+          message: 'Token revocado (sesión cerrada)',
+        });
+      }
+    }
+
+    req.user = {
+      id: decoded.id,
+      email: decoded.email,
+      rol: decoded.rol,
+      entityType: decoded.entityType,
+      jti: decoded.jti,
+      exp: decoded.exp,
+    };
+
+    next();
+  } catch (error) {
+    return res.status(401).json({
+      status: 'error',
+      message: 'Token inválido o expirado',
+      error
+    });
+  }
 };
+
