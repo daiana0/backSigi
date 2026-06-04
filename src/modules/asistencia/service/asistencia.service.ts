@@ -29,6 +29,32 @@ export const asistenciaService = {
     return Asistencia.findByPk(id);
   },
 
+  // 💡 NUEVO: Retorna la estructura formateada de asistencias que requiere tu pantalla de React
+  async getByEstudiante(idEstudiante: number) {
+    try {
+      // Nota para el equipo: En el futuro acá se hará la consulta real usando Sequelize filtrando por idEstudiante
+      // const asistenciasBD = await Asistencia.findAll({ where: { estudianteId: idEstudiante } });
+
+      // Estructura Mock idéntica al DTO del frontend para garantizar compatibilidad total
+      return {
+        asistenciaGeneral: 85,
+        resumenMaterias: [
+          { id: 1, materia: 'Programación I', division: '2º A', presentes: 18, ausentes: 2, porcentaje: 90, estado: 'Regular' },
+          { id: 2, materia: 'Matemática', division: '2º A', presentes: 11, ausentes: 6, porcentaje: 64, estado: 'En riesgo' },
+          { id: 3, materia: 'Inglés Técnico', division: '2º A', presentes: 15, ausentes: 2, porcentaje: 88, estado: 'Regular' },
+          { id: 4, materia: 'Base de Datos', division: '2º A', presentes: 20, ausentes: 1, porcentaje: 95, estado: 'Regular' }
+        ],
+        detalles: [
+          { id: 101, fecha: '24 May, 2026', materia: 'Programación I', division: '2º A', estado: 'Presente', registro: 'Prof. Martínez' },
+          { id: 102, fecha: '23 May, 2026', materia: 'Matemática', division: '2º A', estado: 'Ausente', registro: 'Prof. García' },
+          { id: 103, fecha: '22 May, 2026', materia: 'Base de Datos', division: '2º A', estado: 'Presente', registro: 'Prof. Soria' }
+        ]
+      };
+    } catch (error) {
+      throw error;
+    }
+  },
+
   async create(data: CreateAsistenciaDto) {
     return Asistencia.create(data as any);
   },

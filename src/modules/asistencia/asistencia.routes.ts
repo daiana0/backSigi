@@ -41,3 +41,7 @@ asistenciaRouter.delete(
   validateRole(Role.ADMIN),
   asistenciaController.delete,
 );
+// 💡 Reemplazo temporal para probar la compilación:
+asistenciaRouter.get('/estudiante/:id', (req, res) => {
+  res.status(200).json({ status: 'success', message: 'Ruta de prueba funcionando' });
+});

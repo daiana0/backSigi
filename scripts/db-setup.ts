@@ -77,9 +77,9 @@ async function syncSchema() {
 async function seed() {
   console.log('→ Insertando datos de prueba...');
 
-  const [admin1, admin2] = await Promise.all([
+  //const [admin1, admin2] = await Promise.all([
     // los hooks de bcrypt corren porque usamos create (no bulkCreate)
-  ]);
+  //]);
 
   // ─── Roles ────────────────────────────────────────────
   const roles = await Rol.bulkCreate([
@@ -131,12 +131,12 @@ async function seed() {
 
   // ─── Estudiantes ──────────────────────────────────────
   const estudianteJuan = await Estudiante.create({
-    dni: '45111222', nombre: 'Juan', apellido: 'López', email: 'juan.lopez@alumno.edu',
+    dni: '45111222', nombre: 'Juan', apellido: 'López', email: 'juan.lopez@correo.com',
     telefono: '351-1112223', domicilio: 'Mendoza 100', fechaDeNacimiento: '2005-03-15',
     foto: null, trabaja: false, idUsuario: usuarioJuan.id, idAdministrativo: adminMaria.id,
   } as any);
   const estudianteMarcela = await Estudiante.create({
-    dni: '45333444', nombre: 'Marcela', apellido: 'Ruiz', email: 'marcela.ruiz@alumno.edu',
+    dni: '45333444', nombre: 'Marcela', apellido: 'Ruiz', email: 'marcela.ruiz@correo.com',
     telefono: '351-3334445', domicilio: 'San Juan 200', fechaDeNacimiento: '2004-08-22',
     foto: null, trabaja: true, idUsuario: usuarioMarcela.id, idAdministrativo: adminMaria.id,
   } as any);
@@ -272,20 +272,23 @@ async function seed() {
     fechaHasta: new Date('2026-07-31'), idCicloLectivo: cicloLectivo.id,
     idAdministrativo: adminMaria.id,
   } as any);
+
   const mesa = await MesaExamen.create({
     idTurnoExamen: turno.id, idUnidadCurricular: ucProg1.id, fecha: '2026-07-10',
     hora: '09:00', idDocentePresidente: docenteLucia.id,
     idDocenteVocal1: docenteRoberto.id, idDocenteVocal2: docenteLucia.id,
-    tipo: 'ORDINARIO', idAdministrativo: adminMaria.id,
+    tipo: 'Regular', idAdministrativo: adminMaria.id,
   } as any);
+
   await MesaExamenXLegajo.create({
     idMesaExamen: mesa.id, idLegajo: legajo1.id, condicion: 'regular',
     fechaInscripcion: new Date('2026-07-01T10:00:00Z'),
     nota_oral: 0, nota_escrita: 0, nota_final: 0,
     fechaUltimaModificacion: new Date('2026-07-01T10:00:00Z'),
-    resultado: 'ausente', idAdministrativo: adminMaria.id,
+    resultado: 'ausente', // 💡 CORREGIDO: Volvemos a usar 'ausente' en minúscula para respetar el ENUM estricto de la base de datos
+    idAdministrativo: adminMaria.id,
   } as any);
-  console.log(`  • turno, mesa, inscripción a mesa`);
+  console.log(`   • turno, mesa, inscripción a mesa`);
 
   // ─── Equivalencias ────────────────────────────────────
   await EquivalenciaUnidadCurricular.create({
