@@ -42,6 +42,32 @@ export const asistenciaController = {
     }
   },
 
+  // 💡 NUEVO: GET /asistencias/estudiante/:id
+  getByEstudiante: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const idEstudiante = parseInt(req.params.id as string);
+      if (isNaN(idEstudiante) || idEstudiante <= 0) {
+        return res.status(400).json({
+          status: 'error',
+          message: 'El parámetro "id" del estudiante debe ser un entero positivo.',
+        });
+      }
+
+      const reporteAsistencia = await asistenciaService.getByEstudiante(idEstudiante);
+      
+      if (!reporteAsistencia) {
+        return res.status(404).json({
+          status: 'error',
+          message: `No se encontraron registros de asistencia para el estudiante con id ${idEstudiante}.`,
+        });
+      }
+
+      return res.status(200).json({ status: 'success', data: reporteAsistencia });
+    } catch (err) {
+      next(err);
+    }
+  },
+
   // POST /asistencias
   create: async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -55,8 +81,6 @@ export const asistenciaController = {
         .location(`/api/v1/asistencias/${nuevo.id}`)
         .json({ status: 'success', data: nuevo });
     } catch (err) {
-      // Posible error de índice único (misma fecha, alumno, division)
-      // Lo delega al error handler centralizado, que podría manejar SequelizeUniqueConstraintError
       next(err);
     }
   },
@@ -109,5 +133,5 @@ export const asistenciaController = {
     } catch (err) {
       next(err);
     }
-  },
+  }
 };

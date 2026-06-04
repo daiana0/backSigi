@@ -10,7 +10,10 @@ export const estudianteRouter = Router();
 estudianteRouter.get('/', validateJwt, estudianteController.getAll);
 estudianteRouter.get('/:id', validateJwt, estudianteController.getById);
 
-// Escritura: solo ADMIN puede crear, modificar o eliminar
+// Escritura - Operaciones Críticas: solo ADMIN puede crear o eliminar
 estudianteRouter.post('/', validateJwt, validateRole(Role.ADMIN), estudianteController.create);
-estudianteRouter.patch('/:id', validateJwt, validateRole(Role.ADMIN), estudianteController.update);
 estudianteRouter.delete('/:id', validateJwt, validateRole(Role.ADMIN), estudianteController.delete);
+
+// 💡 ACTUALIZACIÓN:
+estudianteRouter.put('/:id', validateJwt, estudianteController.update);
+estudianteRouter.patch('/:id', validateJwt, estudianteController.update);

@@ -48,7 +48,6 @@ import path from "path";
 import { notificacionXEmailRouter } from "./modules/notificacionesXEmail/notificacionXEmail.routes.js";
 import { notificacionesCron } from "./core/cron-taeras/notificaciones.cron.js";
 
-
 dotenv.config();
 
 const app = express();
@@ -66,7 +65,11 @@ app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 app.use(`${RAIZ}/auth`, authRouter);
 app.use(`${RAIZ}/uploads`, uploadRouter);
 app.use(`${RAIZ}/administrativos`, administrativoRouter);
+
+// 💡 SOLUCIÓN: Registramos la ruta tanto en plural como en singular para blindar el front contra errores 404
 app.use(`${RAIZ}/asistencias`, asistenciaRouter);
+app.use(`${RAIZ}/asistencia`, asistenciaRouter);
+
 app.use(`${RAIZ}/cambios-plan-estudio`, cambioPlanEstudioRouter);
 app.use(`${RAIZ}/carreras`, carreraRouter);
 app.use(`${RAIZ}/ciclos-lectivos`, cicloLectivoRouter);
@@ -116,11 +119,13 @@ const main = async (): Promise<void> => {
   try {
     await sequelize.authenticate();
     console.log("✅ Conexión a la base de datos exitosa!");
-    // Aquí se inicia la limpieza
-    startTokenCleanupScheduler();
-    // Aquí se inician las tareas programadas (notificaciones por email)
-    notificacionesCron();
+    
     await sequelize.sync({ force: false });
+    
+    // Iniciamos los schedulers una vez que la base de datos está sincronizada
+    startTokenCleanupScheduler();
+    notificacionesCron();
+    
     app.listen(PORT, () => {
       console.log(`🚀 App de asistencia corriendo en http://localhost:${PORT}`);
     });
